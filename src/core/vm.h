@@ -95,6 +95,15 @@ class VM {
         case LK:
             reg(ins.a()) = constant(ins.d());
             break;
+        case MV:
+            reg(ins.a()) = reg(ins.b());
+            break;
+        case I2F:
+            reg(ins.a()) = Value::Float(reg(ins.b()).asInt());
+            break;
+        case F2I:
+            reg(ins.a()) = Value::Int(reg(ins.b()).asFloat());
+            break;
         case PR:
             std::cout << reg(ins.a()).toString() << "\n";
             break;
