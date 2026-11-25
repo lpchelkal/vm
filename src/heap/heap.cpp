@@ -11,7 +11,7 @@ uint64_t Heap::new_addr(uint64_t size) {
 uint64_t Heap::compress() {
     uint64_t offset = 0;
     for (auto block = blocks.begin(); block != blocks.end(); block++) {
-        uint8_t flag = block->second.flag;
+        bool flag = block->second.flag;
         uint64_t real_addr = block->second.real_addr;
         uint64_t size = block->second.size;
         if (flag) {
