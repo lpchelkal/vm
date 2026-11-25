@@ -41,6 +41,9 @@ enum Opcode {
 
     PR,
 
+    CALL,
+    RET,
+
     ALLOC,
     FREE,
     LOAD64,
