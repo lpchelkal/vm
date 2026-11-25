@@ -13,8 +13,8 @@ class BlockInfo {
   public:
     uint64_t real_addr;
     uint64_t size;
-    uint8_t flag;
-    BlockInfo(uint64_t real_addr, uint64_t size, uint8_t flag = 1)
+    bool flag;
+    BlockInfo(uint64_t real_addr, uint64_t size, bool flag = true)
         : real_addr(real_addr), size(size), flag(flag) {};
 };
 
