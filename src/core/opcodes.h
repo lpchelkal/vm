@@ -23,7 +23,6 @@ enum Opcode {
     FSUB,
     FMUL,
     FDIV,
-    FMOD,
     FNEG,
 
     I2F,
@@ -41,7 +40,6 @@ enum Opcode {
     FIN,
 
     PR,
-    FPR,
 
     ALLOC,
     FREE,
