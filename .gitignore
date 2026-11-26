@@ -31,4 +31,28 @@ compile_flags.txt
 .DS_Store
 Thumbs.db
 
-agents.md
+AGENTS.md
+AGENT.md
+AI.md
+DESIGN.md
+SKILL.md
+*.prompt.md
+*.instructions.md
+
+# Claude Code
+CLAUDE.md
+CLAUDE.local.md
+.claude/
+
+# Gemini CLI
+GEMINI.md
+.gemini/
+
+# GitHub Copilot
+.github/copilot-instructions.md
+.github/instructions/
+.github/prompts/
+.github/agents/
+
+# Cursor
+.cursor/
