@@ -126,7 +126,6 @@ const std::unordered_map<std::string, OpInfo> ops = {
     {"FSUB", {FSUB, 3, parse_regs}},
     {"FMUL", {FMUL, 3, parse_regs}},
     {"FDIV", {FDIV, 3, parse_regs}},
-    {"FMOD", {FMOD, 3, parse_regs}},
     {"FNEG", {FNEG, 2, parse_regs}},
 
     {"I2F", {I2F, 2, parse_regs}},
@@ -144,7 +143,6 @@ const std::unordered_map<std::string, OpInfo> ops = {
     {"FIN", {FIN, 1, parse_regs}},
 
     {"PR", {PR, 1, parse_regs}},
-    {"FPR", {FPR, 1, parse_regs}},
 
     {"ALLOC", {ALLOC, 2, parse_regs}},
     {"FREE", {FREE, 1, parse_regs}},
