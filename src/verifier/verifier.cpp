@@ -7,7 +7,7 @@
 
 namespace {
 
-const size_t MAX_REGISTER = 28;
+const size_t MAX_REGISTER = 255;
 
 const std::unordered_map<Opcode, OpInfo> op_table = {
     {STP,  {Format::Abc, false, false, false, DCheck::None,     ControlFlow::Stop       }},
@@ -109,7 +109,7 @@ std::vector<std::vector<size_t>> build_reverse_graph(std::vector<std::vector<siz
 }
 
 bool can_terminate_program(ControlFlow cf) {
-    if(cf == ControlFlow::Stop) return true;
+    if(cf == ControlFlow::Stop || cf == ControlFlow::Return) return true;
     return false;
 }
 
@@ -152,12 +152,12 @@ void Verifier::check_d_field(size_t pc, const Instruction& ins, const OpInfo& in
 
 void Verifier::check_registers(size_t pc, const Instruction& ins, const OpInfo& info) {
     if(info.use_a && ins.a() > MAX_REGISTER)
-        error(pc, "register 'a' must be in range [0; 28]");
+        error(pc, "register 'a' must be in range [0; 255]");
     if(info.format == Format::Ad) return;
     if(info.use_b && ins.b() > MAX_REGISTER)
-        error(pc, "register 'b' must be in range [0; 28]");
+        error(pc, "register 'b' must be in range [0; 255]");
     if(info.use_c && ins.c() > MAX_REGISTER)
-        error(pc, "register 'c' must be in range [0; 28]");
+        error(pc, "register 'c' must be in range [0; 255]");
     return;
 }
 
@@ -218,7 +218,13 @@ void Verifier::check_program_graph() {
         }
     }
     if(!can_terminate[0]) error(0, "program has no path to termination");
-    return;
+    for(size_t pc = 0; pc < program_size; pc++) {
+        if(!visited[pc] || !can_terminate[pc] || !instruction_info(program.code[pc].opcode()))
+            continue;
+        for(size_t next : graph[pc])
+            if(visited[next] && !can_terminate[next])
+                warning(pc, "there could be an infinite loop");
+    }
 }
 
 void Verifier::check_program() {
