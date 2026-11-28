@@ -40,6 +40,7 @@ enum Opcode {
     FIN,
 
     PR,
+    FPR,
 
     CALL,
     RET,

@@ -101,15 +101,23 @@ class Lexer {
     int line = 1;
 
     // текущий символ, '\0' - текст кончился
-    char peek() const { return pos < src.size() ? src[pos] : '\0'; }
+    char peek() const {
+        return pos < src.size() ? src[pos] : '\0';
+    }
     // взять текущий символ и сдвинуться
-    char advance() { return src[pos++]; }
+    char advance() {
+        return src[pos++];
+    }
 
-  public:
-    explicit Lexer(std::string source) : src(std::move(source)) {}
+public:
+    explicit Lexer(std::string source)
+        : src(std::move(source)) {
+    }
 
     // следующий токен; в конце текста - Eof
-    Token next() { return {TokenType::Eof, "", line}; }
+    Token next() {
+        return {TokenType::Eof, "", line};
+    }
 
     // все токены по порядку, последний - Eof
     std::vector<Token> tokenize() {

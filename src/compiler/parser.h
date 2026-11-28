@@ -6,7 +6,7 @@
 #include <string>
 #include <vector>
 
-#include "compiler/lexer.h" // Token, TokenType
+#include "compiler/lexer.h"  // Token, TokenType
 
 // Часть 1. Дерево программы
 // Какой узел лежит в указателе - через dynamic_cast
@@ -68,7 +68,7 @@ struct Binary : Expr {
 // print(x), add(1, 2)
 struct Call : Expr {
     ExprPtr
-        callee; // что вызываем; пока всегда Ident, потом может быть p.method
+        callee;  // что вызываем; пока всегда Ident, потом может быть p.method
     std::vector<ExprPtr> args;
 };
 
@@ -77,8 +77,8 @@ struct Call : Expr {
 // var x: int32 = 10 - тип или значение может отсутствовать, но не оба
 struct VarDecl : Stmt {
     std::string name;
-    TypePtr type;  // может быть nullptr, если есть значение
-    ExprPtr value; // может быть nullptr, если есть тип
+    TypePtr type;   // может быть nullptr, если есть значение
+    ExprPtr value;  // может быть nullptr, если есть тип
 };
 
 // x := 10
@@ -89,7 +89,7 @@ struct Define : Stmt {
 
 // x = 10
 struct Assign : Stmt {
-    ExprPtr target; // пока всегда Ident, потом arr[i], p.x
+    ExprPtr target;  // пока всегда Ident, потом arr[i], p.x
     ExprPtr value;
 };
 
@@ -113,15 +113,15 @@ struct If : Stmt {
 // for cond { } если - init и step = nullptr
 // for init; cond; step { }
 struct For : Stmt {
-    StmtPtr init; // может быть nullptr
+    StmtPtr init;  // может быть nullptr
     ExprPtr cond;
-    StmtPtr step; // может быть nullptr
+    StmtPtr step;  // может быть nullptr
     std::unique_ptr<Block> body;
 };
 
 // return x / return
 struct Return : Stmt {
-    ExprPtr value; // может быть nullptr
+    ExprPtr value;  // может быть nullptr
 };
 
 // верхний уровень
@@ -135,7 +135,7 @@ struct Param {
 struct Func {
     std::string name;
     std::vector<Param> params;
-    TypePtr result; // может быть nullptr - функция ничего не возвращает
+    TypePtr result;  // может быть nullptr - функция ничего не возвращает
     std::unique_ptr<Block> body;
     int line = 0;
 };
@@ -144,39 +144,45 @@ struct Module {
     std::vector<std::unique_ptr<Func>> funcs;
 };
 
-} // namespace ast
+}  // namespace ast
 
 // Часть 2. Парсер: токены → дерево
 
 class ParseError : public std::runtime_error {
-  public:
+public:
     int line;
-    ParseError(const std::string &message, int line)
-        : std::runtime_error("line " + std::to_string(line) + ": " + message),
-          line(line) {}
+    ParseError(const std::string& message, int line)
+        : std::runtime_error("line " + std::to_string(line) + ": " + message), line(line) {
+    }
 };
 
 class Parser {
-  public:
-    explicit Parser(std::vector<Token> tokens) : tokens(std::move(tokens)) {}
+public:
+    explicit Parser(std::vector<Token> tokens)
+        : tokens(std::move(tokens)) {
+    }
 
     // весь файл; при первой ошибке бросает ParseError
     ast::Module parse();
 
-  private:
+private:
     std::vector<Token> tokens;
     size_t pos = 0;
 
     // работа с токенами
-    const Token &peek() const { return tokens[pos]; } // текущий токен
+    const Token& peek() const {
+        return tokens[pos];
+    }  // текущий токен
     bool check(TokenType t) const {
         return peek().type == t;
-    } // текущий такого типа?
-    const Token &advance() { return tokens[pos++]; } // взять и сдвинуться
-    bool match(TokenType t); // если такой - съесть и true
-    const Token &
+    }  // текущий такого типа?
+    const Token& advance() {
+        return tokens[pos++];
+    }  // взять и сдвинуться
+    bool match(TokenType t);  // если такой - съесть и true
+    const Token&
     expect(TokenType t,
-           const std::string &what); // обязан быть, иначе ParseError
+           const std::string& what);  // обязан быть, иначе ParseError
 
     // верхний уровень
     std::unique_ptr<ast::Func> parseFunc();

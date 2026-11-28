@@ -16,16 +16,16 @@ using Args = std::vector<std::string>;
 struct OpInfo {
     Opcode op;
     size_t argc;
-    Instruction (*parse)(Opcode, const Args &, size_t);
+    Instruction (*parse)(Opcode, const Args&, size_t);
 };
 
-int64_t parse_int(const std::string &token, size_t line) {
+int64_t parse_int(const std::string& token, size_t line) {
     size_t end = 0;
     try {
         const long long value = std::stoll(token, &end);
         if (end == token.size())
             return static_cast<int64_t>(value);
-    } catch (const std::exception &) {
+    } catch (const std::exception&) {
     }
     throw LoadError("invalid integer '" + token + "'", line);
 }
@@ -41,8 +41,8 @@ int64_t parse_int(const std::string &token, size_t line) {
 //     throw LoadError("invalid float '" + token + "'", line);
 // }
 
-int64_t parse_range(const std::string &token, size_t line, int64_t low,
-                    int64_t high, const char *what) {
+int64_t parse_range(const std::string& token, size_t line, int64_t low,
+                    int64_t high, const char* what) {
     const int64_t value = parse_int(token, line);
     if (value < low || value > high) {
         throw LoadError(std::string(what) + " out of range: " + token, line);
@@ -50,21 +50,21 @@ int64_t parse_range(const std::string &token, size_t line, int64_t low,
     return value;
 }
 
-uint8_t parse_register(const std::string &token, size_t line) {
+uint8_t parse_register(const std::string& token, size_t line) {
     return static_cast<uint8_t>(parse_range(token, line, 0, 28, "register"));
 }
 
-int32_t parse_signed21(const std::string &token, size_t line) {
+int32_t parse_signed21(const std::string& token, size_t line) {
     return static_cast<int32_t>(
         parse_range(token, line, -(1 << 20), (1 << 20) - 1, "immediate"));
 }
 
-uint32_t parse_unsigned21(const std::string &token, size_t line) {
+uint32_t parse_unsigned21(const std::string& token, size_t line) {
     return static_cast<uint32_t>(
         parse_range(token, line, 0, (1 << 21) - 1, "immediate"));
 }
 
-Instruction parse_regs(Opcode op, const Args &args, size_t line) {
+Instruction parse_regs(Opcode op, const Args& args, size_t line) {
     if (args.size() > 3)
         throw LoadError("too many register arguments", line);
     uint8_t regs[3] = {0, 0, 0};
@@ -73,21 +73,21 @@ Instruction parse_regs(Opcode op, const Args &args, size_t line) {
     return Instruction::ABC(op, regs[0], regs[1], regs[2]);
 }
 
-Instruction parse_reg_imm_s(Opcode op, const Args &args, size_t line) {
+Instruction parse_reg_imm_s(Opcode op, const Args& args, size_t line) {
     return Instruction::AD(op, parse_register(args[0], line),
                            parse_signed21(args[1], line));
 }
 
-Instruction parse_reg_imm_u(Opcode op, const Args &args, size_t line) {
+Instruction parse_reg_imm_u(Opcode op, const Args& args, size_t line) {
     return Instruction::AD(op, parse_register(args[0], line),
                            parse_unsigned21(args[1], line));
 }
 
-Instruction parse_imm_u(Opcode op, const Args &args, size_t line) {
+Instruction parse_imm_u(Opcode op, const Args& args, size_t line) {
     return Instruction::AD(op, 0, parse_unsigned21(args[0], line));
 }
 
-Instruction parse_lf(Opcode op, const Args &args, size_t line) {
+Instruction parse_lf(Opcode op, const Args& args, size_t line) {
     return Instruction::AD(op, parse_register(args[0], line),
                            parse_signed21(args[1], line));
 }
@@ -150,9 +150,9 @@ const std::unordered_map<std::string, OpInfo> ops = {
     {"LOAD64", {LOAD64, 2, parse_reg_imm_s}},
     {"STORE64", {STORE64, 2, parse_reg_imm_s}}};
 
-} // namespace
+}  // namespace
 
-Program load_program(const std::string &path) {
+Program load_program(const std::string& path) {
     std::ifstream file(path);
     if (!file.is_open()) {
         throw LoadError("cannot open file '" + path + "'", 0);
@@ -187,11 +187,10 @@ Program load_program(const std::string &path) {
         if (found == ops.end())
             throw LoadError("unknown instruction '" + op_code + "'", count);
 
-        const OpInfo &info = found->second;
+        const OpInfo& info = found->second;
         if (args.size() != info.argc)
             throw LoadError(
-                "'" + op_code + "' expects " + std::to_string(info.argc) +
-                    " argument(s), got " + std::to_string(args.size()),
+                "'" + op_code + "' expects " + std::to_string(info.argc) + " argument(s), got " + std::to_string(args.size()),
                 count);
 
         program.code.push_back(info.parse(info.op, args, count));
