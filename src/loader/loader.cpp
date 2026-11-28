@@ -1,6 +1,6 @@
 #include "loader.h"
 
-#include <cmath>
+// #include <cmath>
 #include <cstdint>
 #include <fstream>
 #include <sstream>
@@ -30,16 +30,16 @@ int64_t parse_int(const std::string &token, size_t line) {
     throw LoadError("invalid integer '" + token + "'", line);
 }
 
-double parse_double(const std::string &token, size_t line) {
-    size_t end = 0;
-    try {
-        const double value = std::stod(token, &end);
-        if (end == token.size() && std::isfinite(value))
-            return value;
-    } catch (const std::exception &) {
-    }
-    throw LoadError("invalid float '" + token + "'", line);
-}
+// double parse_double(const std::string &token, size_t line) {
+//     size_t end = 0;
+//     try {
+//         const double value = std::stod(token, &end);
+//         if (end == token.size() && std::isfinite(value))
+//             return value;
+//     } catch (const std::exception &) {
+//     }
+//     throw LoadError("invalid float '" + token + "'", line);
+// }
 
 int64_t parse_range(const std::string &token, size_t line, int64_t low,
                     int64_t high, const char *what) {
@@ -92,16 +92,17 @@ Instruction parse_lf(Opcode op, const Args &args, size_t line) {
                            parse_signed21(args[1], line));
 }
 
-Value parse_constant(const Args &args, size_t line) {
-    if (args.size() != 2)
-        throw LoadError("'CONST' expects 2 arguments", line);
-    if (args[0] == "i")
-        return Value::Int(parse_int(args[1], line));
-    if (args[0] == "f")
-        return Value::Float(parse_double(args[1], line));
-    throw LoadError(
-        "invalid constant type '" + args[0] + "' (expected 'i' or 'f')", line);
-}
+// Value parse_constant(const Args &args, size_t line) {
+//     if (args.size() != 2)
+//         throw LoadError("'CONST' expects 2 arguments", line);
+//     if (args[0] == "i")
+//         return Value::Int(parse_int(args[1], line));
+//     if (args[0] == "f")
+//         return Value::Float(parse_double(args[1], line));
+//     throw LoadError(
+//         "invalid constant type '" + args[0] + "' (expected 'i' or 'f')",
+//         line);
+// }
 
 const std::unordered_map<std::string, OpInfo> ops = {
     {"STP", {STP, 0, parse_regs}},
@@ -177,10 +178,10 @@ Program load_program(const std::string &path) {
         for (std::string arg; line_iss >> arg;)
             args.push_back(std::move(arg));
 
-        if (op_code == "CONST") {
-            program.constants.push_back(parse_constant(args, count));
-            continue;
-        }
+        // if (op_code == "CONST") {
+        //     program.constants.push_back(parse_constant(args, count));
+        //     continue;
+        // }
 
         const auto found = ops.find(op_code);
         if (found == ops.end())

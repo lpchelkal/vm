@@ -30,10 +30,15 @@ struct Instruction {
     int16_t sd() const { return static_cast<int16_t>(bits & 0xFFFF); }
 
   private:
-    uint32_t bits;
+    uint32_t bits = 0;
+};
+
+struct Constant {
+    enum class Type { Int, Float } type;
+    Value value;
 };
 
 struct Program {
     std::vector<Instruction> code;
-    std::vector<Value> constants;
+    std::vector<Constant> constants;
 };

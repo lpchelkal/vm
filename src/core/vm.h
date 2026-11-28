@@ -40,7 +40,7 @@ class VM {
             throw VMError("constant: index out of range", pc - 1,
                           program.code[pc - 1]);
         }
-        return program.constants[index];
+        return program.constants[index].value;
     }
 
     int64_t ib(const Instruction &i) { return reg(i.b()).asInt(); }
@@ -138,7 +138,7 @@ class VM {
                 v.setFloatA(i, x);
             };
             t[PR] = [](VM &v, I i) {
-                std::cout << v.reg(i.a()).toString() << "\n";
+                std::cout << v.reg(i.a()).asInt() << "\n";
             };
 
             t[CALL] = [](VM &v, I i) {
@@ -177,11 +177,8 @@ class VM {
             throw VMError("unknown opcode " + std::to_string(op), pc - 1, ins);
         }
 
-        try {
-            handlers()[op](*this, ins);
-        } catch (const TypeError &e) {
-            throw VMError(e.what(), pc - 1, ins);
-        }
+        handlers()[op](*this, ins);
+
         return !stoped;
     }
 
