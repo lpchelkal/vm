@@ -140,6 +140,9 @@ class VM {
             t[PR] = [](VM &v, I i) {
                 std::cout << v.reg(i.a()).asInt() << "\n";
             };
+            t[FPR] = [](VM &v, I i) {
+                std::cout << v.reg(i.a()).asFloat() << "\n";
+            };
 
             t[CALL] = [](VM &v, I i) {
                 v.frames.push(Frame{v.pc, v.base});
