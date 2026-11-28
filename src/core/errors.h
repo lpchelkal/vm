@@ -9,9 +9,10 @@ class VMError : public std::runtime_error {
     size_t pc;
     Instruction instr;
 
-  public:
+public:
     VMError(std::string text_, size_t pc_, Instruction instr_)
-        : std::runtime_error(text_), pc(pc_), instr(instr_) {}
+        : std::runtime_error(text_), pc(pc_), instr(instr_) {
+    }
 
     size_t getPc() const { return pc; }
     Instruction getInstr() const { return instr; }

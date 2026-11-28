@@ -10,7 +10,7 @@ class HeapError : public std::runtime_error {
 };
 
 class BlockInfo {
-  public:
+public:
     uint64_t real_addr;
     uint64_t size;
     bool flag;
@@ -19,7 +19,7 @@ class BlockInfo {
 };
 
 class Heap {
-  private:
+private:
     std::vector<uint8_t> memory;
     std::map<uint64_t, BlockInfo> blocks;
     uint64_t next_addr = 1;
@@ -28,14 +28,13 @@ class Heap {
     uint64_t new_addr(uint64_t size);
     uint64_t compress();
 
-  public:
+public:
     explicit Heap(uint64_t size) : memory(size, 0) {
-        if (size == 0)
-            throw HeapError("incorrect size");
+        if (size == 0) throw HeapError("incorrect size");
     };
 
-    Heap(const Heap &) = delete;
-    Heap &operator=(const Heap &) = delete;
+    Heap(const Heap&) = delete;
+    Heap& operator=(const Heap&) = delete;
 
     uint64_t alloc(uint64_t size);
     void free(uint64_t addr);
